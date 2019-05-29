@@ -34,73 +34,94 @@ function renderStars(stars) {
 
 const ship = {
     pos: new Vec2(canvas.width/2, canvas.height/2),
-    vel: new Vec2(0, 0),
-    acc: 0,
+    vel: 0,
+    acc: 0, // a constant not a vector because the direction is determined by "dir"
     aVel: 0, // angular velocity
     aAcc: 0, // angular acceleration
-    rot: 0,
+    dir: 0,
 };
+
+function renderFlame(color) {
+    ctx.beginPath();
+    ctx.moveTo(10, 30);
+    ctx.lineTo(5, 30);
+    ctx.lineTo(0, 37);
+    ctx.lineTo(-5, 30);
+    ctx.lineTo(-10, 30);
+    ctx.lineTo(0, 20);
+    ctx.strokeStyle = color;
+    ctx.closePath();
+    ctx.stroke();
+}
 
 function renderShip(ship) {
     ctx.save();
     ctx.translate(ship.pos.x, ship.pos.y);
-    ctx.rotate(ship.rot);
+    ctx.rotate(ship.dir);
+
+    if (ship.acc !== 0) {
+        ctx.save();
+        ctx.scale(0.5, 0.5);
+        ctx.translate(0, 20);
+        renderFlame('yellow');
+        ctx.restore();
+        renderFlame('red');
+    }
+
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(10, 30);
-    ctx.lineTo(-10, 30);
-    ctx.lineTo(0, 0);
     ctx.strokeStyle = randomShipColor();
-    ctx.stroke();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-10, 30);
+    ctx.lineTo(0, 20);
+    ctx.lineTo(10, 30);
+    ctx.lineTo(10, 30);
     ctx.closePath();
+    ctx.stroke();
+
     ctx.restore();
 }
 
-function clamp(val, min, max) {
-    return Math.min(max, Math.max(min, val));
-}
-
 function update() {
-    ship.vel = ship.vel.addScalar(ship.acc);
-    ship.vel = Vec2.fromAngle(-ship.rot).mulScalar(-1);
-    ship.pos = ship.pos.add(ship.vel);
-    ship.aVel += ship.aAcc;
-    ship.aVel = clamp(ship.aVel, -0.1, 0.1);
-    ship.rot += ship.aVel;
+    ship.vel = clamp(ship.vel + ship.acc, -4, 2);
+    ship.aVel = clamp(ship.aVel + ship.aAcc, -0.1, 0.1);
+    ship.dir += ship.aVel;
+
+    //    ship.acc -= 0.001;
+
+    const vel = Vec2.fromAngle(-ship.dir).mulScalar(ship.vel);
+    ship.pos = ship.pos.add(vel);
 }
 
 window.addEventListener('keyup', function (e) {
-    if (e.key === 'a' || e.key === 'd' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        ship.aAcc = 0;
-    }
+    //    if (e.key === 'a' || e.key === 'd' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    ship.aAcc = 0;
+    ship.acc = 0;
+    //    }
 });
 
 window.addEventListener('keypress', function (e) {
-    console.log(ship.acc);
-    let acc = 0,
-        thrust = 0.01;
+    const thrust = 0.05;
     switch (e.key) {
     case 'w':
     case 'ArrowUp':
-        acc = -thrust;
+        ship.acc = -thrust;
         break;
     case 'a':
     case'ArrowLeft':
-        ship.aAcc = -Math.PI/1800;
+        ship.aAcc = -Math.PI/1500;
         break;
     case 's':
     case 'ArrowDown':
-        acc = thrust;
+        ship.acc = thrust;
         break;
     case 'd':
     case'ArrowRight':
-        ship.aAcc = Math.PI/1800;
+        ship.aAcc = Math.PI/1500;
         break;
     case ' ':
-        acc = ship.acc*2;
+        ship.acc = ship.acc*2;
         break;
     }
-    ship.acc = acc;
 });
 
 function loop() {
