@@ -1,3 +1,5 @@
+const { randomRange } = require('./random');
+
 class Vec2 {
     constructor(x=0, y=0) {
         this.x = x;
@@ -37,6 +39,21 @@ class Vec2 {
         return Math.atan(norm.x, norm.y);
     }
 
+    snapAngle(o) {
+        const angle = this.sub(o).angle(),
+              snapThreshold = Math.PI/6,
+              newAngle = Math.floor(angle/snapThreshold) * snapThreshold;
+
+        return Vec2.fromAngleCorrect(newAngle);
+    }
+
+    roundTo(s) {
+        const nx = Math.round(this.x/s),
+              ny = Math.round(this.y/s);
+
+        return new Vec2(nx * s, ny * s);
+    }
+
     mag() {
         return Math.sqrt(this.x*this.x + this.y*this.y);
     }
@@ -45,11 +62,29 @@ class Vec2 {
         return new Vec2(this.x+o.x, this.y+o.y);
     }
 
-    static fromAngle(rads) {
-        return new Vec2(Math.sin(rads), Math.cos(rads));
+    sub(o) {
+        return new Vec2(this.x-o.x, this.y-o.y);
+    }
+
+    static fromAngleCorrect(rads) {
+        return new Vec2(Math.sin(rads), -Math.cos(rads));
     }
     
     static random(minX, maxX, minY, maxY) {
         return new Vec2(randomRange(minX, maxX), randomRange(minY, maxY));
     }
+
+    hyp() {
+        return Math.sqrt(this.x*this.x + this.y*this.y);
+    }
+
+    clone() {
+        return new Vec2(this.x, this.y);
+    }
+
+    static distance(v1, v2) {
+        return v1.sub(v2).hyp();
+    }
 }
+
+module.exports = Vec2;

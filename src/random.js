@@ -6,3 +6,8 @@ function randomShipColor() {
     const colors = [randomRange(100, 255), randomRange(100, 255), randomRange(100, 255)];
     return 'rgb(' + colors.join(',') + ')';
 }
+
+Object.assign(module.exports, {
+    randomRange,
+    randomShipColor
+});
