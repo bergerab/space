@@ -2,10 +2,32 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
     </head>
     <body>
         <canvas id="screen" width="1200" height="600"></canvas>
         <script src="../dist/space.js"></script>
+
+        <script>
+         function press(key) {
+             window.dispatchEvent(new KeyboardEvent('keydown',{'key': key}));
+         }
+
+         function unpress(key) {
+             window.dispatchEvent(new KeyboardEvent('keyup',{'key': key}));
+         }
+        </script>
+        <div>
+            <button onmousedown="press('w')" onmouseup="unpress('w')">Up</button>
+        </div>
+        <div>
+            <button onmousedown="press('a')" onmouseup="unpress('a')">Left</button>
+            <button onmousedown="press('s')" onmouseup="unpress('s')">Down</button>
+            <button onmousedown="press('d')" onmouseup="unpress('d')">Right</button>
+        </div>
+        <div>
+            <button onmousedown="press(' ')" onmouseup="unpress(' ')">Space</button>
+        </div>
     </body>
 </html>
