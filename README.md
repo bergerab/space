@@ -8,3 +8,5 @@ Space
 </div>
 
 A vector graphics style space themed game without a purpose at the moment.
+
+<a href="https://adambertrandberger.github.io/space/play/index.html">Click here to play try it.</a>
