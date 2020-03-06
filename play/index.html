@@ -7,47 +7,5 @@
     <body class="noselect">
         <canvas id="screen" width="1200" height="600"></canvas>
         <script src="../dist/space.js"></script>
-
-        <script>
-         function press(key) {
-             window.dispatchEvent(new KeyboardEvent('keydown',{'key': key}));
-         }
-
-         function unpress(key) {
-             window.dispatchEvent(new KeyboardEvent('keyup',{'key': key}));
-         }
-        </script>
-        <div>
-            <button class="center" ontouchstart="press('w')" ontouchend="unpress('w')">Up</button>
-        </div>
-        <div>
-            <button ontouchstart="press('a')" ontouchend="unpress('a')">Left</button>
-            <button ontouchstart="press('s')" ontouchend="unpress('s')">Down</button>
-            <button ontouchstart="press('d')" ontouchend="unpress('d')">Right</button>
-        </div>
-        <div>
-            <button class="center" ontouchstart="press(' ')" ontouchend="unpress(' ')">Space</button>
-        </div>
-
-        <style>
-         button {
-             width: 30em;
-             height: 10em;
-         }
-
-         button.center {
-             margin-left: 30em;
-         }
-
-         .noselect {
-             cursor: default;
-             -webkit-touch-callout: none;
-             -webkit-user-select: none;
-             -khtml-user-select: none;
-             -moz-user-select: none;
-             -ms-user-select: none;
-             user-select: none;
-         }
-        </style>
     </body>
 </html>
